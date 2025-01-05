@@ -24,19 +24,16 @@ def info_lap1():
     if lap_times:
         shortest_lap= min(lap_times)   
         longest_lap= max(lap_times)      
-        avg_lap= sum(lap_times) / len(lap_times)
+        
 
         print(f"The shortest lap was {shortest_lap:3f} by {driver}")
         print(f"The longest lap was {longest_lap:3f} by {driver}")
-        print(f"The average lap was {avg_lap:3f}")
         
 
     else:
-        print("None")
+        print("None")   
+
     
-                 
-
-
 def info_lap2():
    
     lap_times2=[]
@@ -92,13 +89,13 @@ def info_lap3():
         print(f"The longest lap was {longest_lap:3f} by {driver}")
         print(f"The average lap was {avg_lap:3f}\n")
 
-    else:
-        print("None")
+
+
     
     
 
 def indi_drivers_info():
-    # Mapping the drivers' information from the text file by accessing keys and values
+    # Mapping the driver's information from the text file by accessing keys and values
     try:
         with open("f1_drivers.txt", "r") as f:
             info_of_drivers = {}  # An empty dictionary for storing key-value pairs
@@ -121,6 +118,7 @@ def indi_drivers_info():
         print(f"No information found for the key '{name_input}'.")
 
 
+
 def lap_times_comparison(lap_data):
     """
     Plot lap statistics using matplotlib.
@@ -139,8 +137,8 @@ def lap_times_comparison(lap_data):
         x = range(len(drivers))  # x-axis positions
         width = 0.25  # Bar width
 
-        plt.bar([pos - width for pos in x], min_times, width, label='Min Times', color='blue')
-        plt.bar(x, avg_times, width, label='Avg Times', color='green')
+        plt.bar([pos - width for pos in x], min_times, width, label='Min Times', color='green')
+        plt.bar(x, avg_times, width, label='Avg Times', color='yellow')
         plt.bar([pos + width for pos in x], max_times, width, label='Max Times', color='red')
 
         # Adding labels and titles

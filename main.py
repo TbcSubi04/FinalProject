@@ -122,49 +122,6 @@ def indi_drivers_info():
 
 
 
-def plot_comparison():
-    lap_files = ["lap_times_1.txt", "lap_times_2.txt", "lap_times_3.txt"]
-    f1_drivers= []
-    avg_times = [avg_times]
-    min_times = [min_times]
-    max_times = [max_times]
-
-    for lap_file in lap_files:
-        lap_times = []
-
-        try:
-            with open("lap_times_1.txt", 'r') as file:
-                lines = file.readlines()
-
-            # Extract lap times
-            for line in lines[1:]:
-                lap_time = float(line[3:].strip())
-                lap_times.append(lap_time)
-
-            avg_times.append(sum(lap_times) / len(lap_times))
-            min_times.append(min(lap_times))
-            max_times.append(max(lap_times))
-
-        except FileNotFoundError:
-            print(f"File {lap_file} not found!")
-            avg_times.append(0)
-            min_times.append(0)
-            max_times.append(0)
-
-    # Plot the comparisons
-    x = range(len(f1_drivers))
-
-    plt.figure(figsize=(10, 6))
-    plt.plot(f1_drivers, avg_times, marker='o', label='Average Lap Time')
-    plt.plot(f1_drivers, min_times, marker='o', label='Shortest Lap Time')
-    plt.plot(f1_drivers, max_times, marker='o', label='Longest Lap Time')
-    plt.xticks(ticks=x, labels=f1_drivers)
-    plt.xlabel('Drivers')
-    plt.ylabel('Time (s)')
-    plt.title('Comparison of Lap Times Across Laps')
-    plt.legend()
-    plt.grid(alpha=0.6)
-    plt.show()
 
 
 
@@ -179,6 +136,6 @@ info_lap1()
 info_lap2()
 info_lap3()
 indi_drivers_info()
-plot_comparison()
+
 
 
