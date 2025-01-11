@@ -13,9 +13,8 @@ def info_lap1():
     lap_times= []     #to store the lap times
 
     with open ("lap_times_1.txt",'r')as file:
-        lines = file.readlines()
-    for line in lines[1:]:  # to start from the line from the second line
-        driver=line[:3]    #slicing in order trace  the drivers code
+        line= file.readlines()
+    for line in line[1:]:  # to start from the line from the second line
         lap_time=float(line[3:])         #slicing to access the lap time (non-string values need to be converted first)
         lap_times.append(lap_time)          #to store the added lap time to the list
         
@@ -23,11 +22,13 @@ def info_lap1():
 
     if lap_times:
         shortest_lap= min(lap_times)   
-        longest_lap= max(lap_times)      
+        longest_lap= max(lap_times)
+        avg_lap= sum(lap_times) / len(lap_times)      
         
 
-        print(f"The shortest lap was {shortest_lap:3f} by {driver}")
-        print(f"The longest lap was {longest_lap:3f} by {driver}")
+        print(f"The shortest lap was {shortest_lap:3f}")
+        print(f"The longest lap was {longest_lap:3f}")
+        print(f"The average lap was {avg_lap:3f}")
         
 
     else:
@@ -35,12 +36,16 @@ def info_lap1():
 
     
 def info_lap2():
+    try:
+        with open("lap_times_2.txt",'r') as file:
+            print(f"The location for the second lap is : {file.readline()}")
+    except:
+        print("Second location could not be traced")        
    
     lap_times2=[]
     file=open("lap_times_2.txt",'r') 
     lines = file.readlines()
     for line in lines[1:]:  
-        driver=line[:3]    
         lap_time=float(line[3:])         
         lap_times2.append(lap_time)        
     
@@ -48,12 +53,11 @@ def info_lap2():
     if lap_times2:
         shortest_lap= min(lap_times2)    
         longest_lap= max(lap_times2)      
-        avg_lap= sum(lap_times2) / len(lap_times2)
 
-        print(f"The shortest lap was {shortest_lap:3f} by {driver}")
-        print(f"The longest lap was {longest_lap:3f} by {driver}")
-        print(f"The average lap was {avg_lap:3f}\n")
 
+        print(f"The shortest lap was {shortest_lap:3f}")
+        print(f"The longest lap was {longest_lap:3f}")
+        
     else:
         print("None")
 
@@ -67,14 +71,13 @@ def info_lap3():
         
     except:
         print("The location for the lap could not be traced")
-    f.close()
+    
 
     lap_times3= []
 
     file= open("lap_times_3.txt",'r')
     lines = file.readlines()
     for line in lines[1:]:  
-        driver=line[:3]   
         lap_time=float(line[3:])        
         lap_times3.append(lap_time)         
         
@@ -85,8 +88,8 @@ def info_lap3():
         longest_lap= max(lap_times3)      
         avg_lap= sum(lap_times3) / len(lap_times3)
 
-        print(f"The shortest lap was {shortest_lap:3f} by {driver}")
-        print(f"The longest lap was {longest_lap:3f} by {driver}")
+        print(f"The shortest lap was {shortest_lap:3f}" )
+        print(f"The longest lap was {longest_lap:3f}")
         print(f"The average lap was {avg_lap:3f}\n")
 
 
@@ -119,74 +122,38 @@ def indi_drivers_info():
 
 
 
-def lap_times_comparison(lap_data):
-    """
-    Plot lap statistics using matplotlib.
-    :param lap_data: Dictionary containing lap data in the format:
-                     {lap_name: {'drivers': [drivers], 'avg': [avg_times], 'min': [min_times], 'max': [max_times]}}
-    """
-    lap_names = lap_data.keys()
+def plot_lap_times():
+    drivers = ["Driver 1", "Driver 2", "Driver 3"]
+    shortest_laps = []
+    longest_laps = []
 
-    for lap_name in lap_names:
-        drivers = lap_data[lap_name]['drivers']
-        avg_times = lap_data[lap_name]['avg']
-        min_times = lap_data[lap_name]['min']
-        max_times = lap_data[lap_name]['max']
+    # Gather lap data
+    lap1 = info_lap1()
+    lap2 = info_lap2()
+    lap3 = info_lap3()
 
-        # Create a grouped bar chart
-        x = range(len(drivers))  # x-axis positions
-        width = 0.25  # Bar width
+    for lap in [lap1, lap2, lap3]:
+        if lap:
+            shortest_laps.append(lap[0])
+            longest_laps.append(lap[1])
+        else:
+            shortest_laps.append(0)
+            longest_laps.append(0)
 
-        plt.bar([pos - width for pos in x], min_times, width, label='Min Times', color='green')
-        plt.bar(x, avg_times, width, label='Avg Times', color='yellow')
-        plt.bar([pos + width for pos in x], max_times, width, label='Max Times', color='red')
+    # Plotting
+    x = range(len(drivers))
+    width = 0.4
 
-        # Adding labels and titles
-        plt.xlabel('Drivers')
-        plt.ylabel('Lap Times (s)')
-        plt.title(f'Lap Statistics for {lap_name}')
-        plt.xticks(x, drivers, rotation=45)
-        plt.legend()
-        plt.tight_layout()
+    plt.bar(x, shortest_laps, width=width, label="Shortest Lap", color="green")
+    plt.bar([p + width for p in x], longest_laps, width=width, label="Longest Lap", color="red")
 
-        # Show the plot
-        plt.show()
+    plt.xlabel("Drivers")
+    plt.ylabel("Lap Time (seconds)")
+    plt.title("Shortest and Longest Lap Times of Drivers")
+    plt.xticks([p + width / 2 for p in x], drivers)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
 
-def main():
-    lap_data = {
-        "Lap 1": {"drivers": [], "avg": [], "min": [], "max": []},
-        "Lap 2": {"drivers": [], "avg": [], "min": [], "max": []},
-        "Lap 3": {"drivers": [], "avg": [], "min": [], "max": []},
-    }
-
-    # Call functions to collect data
-    # Example: Populate lap_data['Lap 1'] with relevant values
-    lap_data["Lap 1"]["drivers"] = ["", "", ""]
-    lap_data["Lap 1"]["avg"] = [80.5, 82.1, 79.8]
-    lap_data["Lap 1"]["min"] = [79.1, 81.0, 78.3]
-    lap_data["Lap 1"]["max"] = [82.0, 83.5, 81.2]
-
-    # Similarly populate Lap 2 and Lap 3 data
-
-    # Plot the statistics
-    lap_times_comparison(lap_data)
-
-
-if __name__ == "__main__":
-    main()
-
-
-
-
-   
-
-
-
-f1_drivers()
-info_lap1()
-info_lap2()
-info_lap3()
-indi_drivers_info()
-
-
-
+# Call the plot function
+plot_lap_times()
