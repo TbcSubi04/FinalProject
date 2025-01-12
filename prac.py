@@ -1,104 +1,199 @@
 import sys
 import matplotlib.pyplot as plt
 
-def f1_drivers():
+
+def info_lap1():
     try:
-        with open("lap_times_1.txt",'r') as file:
-            print(f"The first location of the lap is : {file.readline()}")
+        with open("lap_times_1.txt", 'r') as f:
+            print(f"The location for the first lap is : {f.readline().strip()}")
+    except:
+        print("The location could not be traced")
+
+    try:
+        with open("lap_times_1.txt", 'r') as file:
+            lines = file.readlines()
     except:
         print("The file could not be traced")
+        return  # Exit the function if the file cannot be read
 
-    
-def info_lap1():
-    lap_times= []     #to store the lap times
 
-    with open ("lap_times_1.txt",'r')as file:
-        line= file.readlines()
-    for line in line[1:]:  # to start from the line from the second line
-        lap_time=float(line[3:])         #slicing to access the lap time (non-string values need to be converted first)
-        lap_times.append(lap_time)          #to store the added lap time to the list
+    lap_times = {}  # an empty dictionary to store lap times for each driver
+
+    for line in lines[1:]:  # Loop through each line in the file, starting from the second line
+        driver = line[:3].strip()  # Extract the driver code (first 3 characters)
+        try:
+            lap_time = float(line[3:].strip()) # Extract the lap time and convert it to a float
+        except:
+            print("Could not convert lap time to float")
+            
+        if driver not in lap_times:
+            lap_times[driver] = []  # If the driver is not in the dictionary, add them with an empty list
+        lap_times[driver].append(lap_time)  # Add the lap time to the driver's list
+
+        drivers=[]
+        shortest_laps=[]
+        longest_laps=[]
+
+    for driver, times in lap_times.items():  # For each driver, calculate the shortest, longest, and average lap times
+        if not times:
+            continue
+        shortest_lap_1 = min(times)
+        longest_lap_1= max(times)
+        avg_lap_1 = sum(times) / len(times)
+
+
+        print(f"The shortest lap time of {driver} for the first lap is : {shortest_lap_1:.3f}")
+        print(f"The longest lap time of {driver} for the  first lap is : {longest_lap_1:.3f}")
+        print(f"The average lap time of {driver} for the first lap is {avg_lap_1:.3f}\n")
+
         
-          
-
-    if lap_times:
-        shortest_lap= min(lap_times)   
-        longest_lap= max(lap_times)
-        avg_lap= sum(lap_times) / len(lap_times)      
+        drivers.append(driver)
+        shortest_laps.append(shortest_lap_1)
+        longest_laps.append(longest_lap_1)
         
 
-        print(f"The shortest lap was {shortest_lap:3f}")
-        print(f"The longest lap was {longest_lap:3f}")
-        print(f"The average lap was {avg_lap:3f}")
-        
+        x= range(len((drivers))) #x positions for the bars
 
-    else:
-        print("None")   
+    plt.figure(figsize=(10, 6))  # Increase figure size for better readability
+    plt.bar(x, shortest_laps, width=0.4, label='Shortest Lap', color='yellow', align='edge')
+    plt.bar([p + 0.4 for p in x], longest_laps, width=0.4, label='Longest Lap', color='lightgreen', align='edge')
+    plt.xlabel("Drivers", fontsize=12)  # Increase font size for x-label
+    plt.ylabel("Lap Times (in seconds)", fontsize=12)  # Increase font size for y-label
+    plt.title("Lap 1 Analysis", fontsize=14)  # Increase font size for title
+    plt.xticks([p + 0.2 for p in x], drivers,fontsize=10)  # Rotate x-tick labels
+    plt.legend()
+    #plt.grid(axis='both')
+   # plt.tight_layout()  # Adjust layout to make room for rotated labels
+    plt.show()
 
-    
+
+#rotation=45, ha='right', fontsize=10)
 def info_lap2():
     try:
-        with open("lap_times_2.txt",'r') as file:
-            print(f"The location for the second lap is : {file.readline()}")
+        with open("lap_times_2.txt",'r')as location:
+            print(f"The location for the second lap is : {location.readline()}")
     except:
-        print("Second location could not be traced")        
-   
-    lap_times2=[]
-    file=open("lap_times_2.txt",'r') 
-    lines = file.readlines()
-    for line in lines[1:]:  
-        lap_time=float(line[3:])         
-        lap_times2.append(lap_time)        
-    
-      
-    if lap_times2:
-        shortest_lap= min(lap_times2)    
-        longest_lap= max(lap_times2)      
+        print("The location could not be located") 
+
+    try:
+        with open("lap_times_2.txt",'r')as file:
+            lines=file.readlines() 
+
+    except:
+        print("The file could not be traced.")
+
+    lap_times1 = {}  
+
+    for line in lines[1:]:
+        driver = line[:3].strip() 
+        try:
+            lap_time = float(line[3:].strip()) 
+        except:
+            print("Could not convert lap time to float")
+            
+
+        if driver not in lap_times1:
+            lap_times1[driver] = []  
+        lap_times1[driver].append(lap_time) 
+
+        drivers=[]
+        shortest_laps=[]
+        longest_laps=[]
+
+    for driver, times in lap_times1.items():  
+        if not times:
+            continue
+        shortest_lap_2 = min(times)
+        longest_lap_2= max(times)
+        avg_lap_2 = sum(times) / len(times)
 
 
-        print(f"The shortest lap was {shortest_lap:3f}")
-        print(f"The longest lap was {longest_lap:3f}")
-        
-    else:
-        print("None")
+        print(f"The shortest lap  time of {driver} for the second lap is : {shortest_lap_2:.3f}")
+        print(f"The longest lap  time of {driver} for the second lap is : {longest_lap_2:.3f}")
+        print(f"The average lap time of {driver} for the second lap is  {avg_lap_2}\n ")
 
-    file.close()
+        drivers.append(driver)
+        shortest_laps.append(shortest_lap_2)
+        longest_laps.append(longest_lap_2)
+
+        x=range(len((drivers)))
+
+    plt.figure(figsize=(10,6))
+    plt.title(" Lap 2 Analysis")
+    plt.bar(x,shortest_laps, width=0.4, label="shortest_time", color='yellow', align='center')
+    plt.bar([p+0.4 for p in x], longest_laps, width=0.4, label='longest_time',color="lightgreen", align='center')
+    plt.xlabel("Drivers", fontsize=12)
+    plt.ylabel("Lap Times (in seconds)", fontsize=12)
+    plt.xticks([p + 0.2 for p in x],drivers, fontsize=10)
+    plt.legend()
+    plt.show()
+
+
 
 def info_lap3():
-   
     try:
-        with open("lap_times_3.txt","r") as f:
-            print(f"The location for the third lap is {f.readline()}")
-        
+        with open("lap_times_3.txt",'r') as file:
+            print(f"The location for the third lap is : {file.readline()}")
     except:
-        print("The location for the lap could not be traced")
+        print("The file could not be traced")
+ 
+
+    try:
+        with open("lap_times_3.txt", 'r') as file:
+            lines = file.readlines()
+    except:
+        print(f"The file was not found.")
+        return
+
+    lap_times = {}  
+
+    for line in lines[1:]: 
+        driver = line[:3].strip() 
+        try:
+            lap_time = float(line[3:].strip()) 
+        except:
+            print("Could not convert lap time to float")
+            
+
+        if driver not in lap_times:
+            lap_times[driver] = []  
+        lap_times[driver].append(lap_time)  
+
+        drivers=[]
+        shortest_laps3=[]
+        longest_laps3=[]
+
+    for driver, times in lap_times.items():  
+        if not times:
+            continue
+        shortest_lap_3 = min(times)
+        longest_lap_3= max(times)
+        avg_lap_3 = sum(times) / len(times)
+
+        print(f"The shortest lap time of {driver} for the third lap is : {shortest_lap_3:.3f}")
+        print(f"The longest lap time of {driver}  for the third lap is {longest_lap_3:.3f}")
+        print(f"The average lap time of {driver} for the third lap is {avg_lap_3:.3f}\n")
+
+        drivers.append(driver)
+        shortest_laps3.append(shortest_lap_3)
+        longest_laps3.append(longest_lap_3)
+
+        x=range(len((drivers)))
     
+    plt.figure(figsize=[10,6])
+    plt.bar(x,shortest_laps3, width=0.4, label="Shortest Time", color='yellow', align='edge')
+    plt.bar([p + 0.4 for p in x], longest_laps3, width=0.4, label="Longest Time", color='lightgreen', align='edge')
+    plt.xlabel("Drivers", fontsize=12)
+    plt.ylabel("Lap Time (in seconds)", fontsize=12)
+    plt.title("Lap 3 Analysis")
+    plt.xticks([p + 0.2 for p in x], drivers, fontsize=10)
+    plt.legend()
+    plt.show()
 
-    lap_times3= []
+                 
 
-    file= open("lap_times_3.txt",'r')
-    lines = file.readlines()
-    for line in lines[1:]:  
-        lap_time=float(line[3:])        
-        lap_times3.append(lap_time)         
-        
-          
-
-    if lap_times3:
-        shortest_lap= min(lap_times3)    
-        longest_lap= max(lap_times3)      
-        avg_lap= sum(lap_times3) / len(lap_times3)
-
-        print(f"The shortest lap was {shortest_lap:3f}" )
-        print(f"The longest lap was {longest_lap:3f}")
-        print(f"The average lap was {avg_lap:3f}\n")
-
-
-
-    
-    
-
-def indi_drivers_info():
-    # Mapping the driver's information from the text file by accessing keys and values
+def find_drivers_info():
+    # Mapping the drivers' information from the text file by accessing keys and values
     try:
         with open("f1_drivers.txt", "r") as f:
             info_of_drivers = {}  # An empty dictionary for storing key-value pairs
@@ -111,9 +206,7 @@ def indi_drivers_info():
                     info_of_drivers[key] = value
     except:
         print("The file you are trying to access does not exist.")
-        return
-
-    
+        
     name_input = input("Enter the driver's code: ")
     if name_input in info_of_drivers:
         print(f"The information for '{name_input}' is {info_of_drivers[name_input]}")
@@ -121,39 +214,42 @@ def indi_drivers_info():
         print(f"No information found for the key '{name_input}'.")
 
 
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python script.py <option>")
+        print("""Options:"""
+        "  lap1   - Analyze first lap data"
+        "  lap2   - Analyze second lap data"
+        "  lap3   - Analyze third lap data"
+        "  driver - Find driver information")
+        sys.exit(1)
 
-def plot_lap_times():
-    drivers = ["Driver 1", "Driver 2", "Driver 3"]
-    shortest_laps = []
-    longest_laps = []
+    option = sys.argv[1].lower()
 
-    # Gather lap data
-    lap1 = info_lap1()
-    lap2 = info_lap2()
-    lap3 = info_lap3()
+    if option == "lap1":
+        info_lap1()
+    elif option == "lap2":
+        info_lap2()
+    elif option == "lap3":
+        info_lap3()
+    elif option == "driver":
+        find_drivers_info()
+    else:
+        print(f"Unknown option: {option}")
+        print("Available options: lap1, lap2, lap3, driver")
+        sys.exit(1)
 
-    for lap in [lap1, lap2, lap3]:
-        if lap:
-            shortest_laps.append(lap[0])
-            longest_laps.append(lap[1])
-        else:
-            shortest_laps.append(0)
-            longest_laps.append(0)
 
-    # Plotting
-    x = range(len(drivers))
-    width = 0.4
+if __name__ == "__main__":
+    main()
 
-    plt.bar(x, shortest_laps, width=width, label="Shortest Lap", color="green")
-    plt.bar([p + width for p in x], longest_laps, width=width, label="Longest Lap", color="red")
+    
 
-    plt.xlabel("Drivers")
-    plt.ylabel("Lap Time (seconds)")
-    plt.title("Shortest and Longest Lap Times of Drivers")
-    plt.xticks([p + width / 2 for p in x], drivers)
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
 
-# Call the plot function
-plot_lap_times()
+
+
+
+
+       
+
+
