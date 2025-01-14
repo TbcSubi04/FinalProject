@@ -3,7 +3,6 @@ from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 
-
 def plot_graph(drivers, shortest_laps, longest_laps, title):
     # Create a new figure for the graph
     figure = plt.Figure(figsize=(8, 5), dpi=100)
@@ -22,14 +21,21 @@ def plot_graph(drivers, shortest_laps, longest_laps, title):
 
     return figure
 
-
 def info_lap(filename, title):
+    # Clear main frame
+    clear_frame()
+
+    # Create the back button
+    ttk.Button(main_frame, text="Go Back", command=show_main_menu).pack(anchor="nw", pady=10)
+
     try:
         with open(filename, 'r') as file:
             location = file.readline().strip()
-            result_label["text"] += f"Location of the lap: {location}\n\n"
+            result_label = tk.Label(main_frame, text=f"Location of the lap: {location}\n\n", font=("Arial", 10), anchor="nw", justify="left")
+            result_label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
     except:
-        result_label["text"] = "The file could not be traced.\n"
+        result_label = tk.Label(main_frame, text="The file could not be traced.\n", font=("Arial", 10), anchor="nw", justify="left")
+        result_label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         return
 
     try:
@@ -75,6 +81,19 @@ def info_lap(filename, title):
     canvas_widget = canvas.get_tk_widget()
     canvas_widget.pack()
 
+def show_main_menu():
+    # Clear main frame
+    clear_frame()
+
+    # Add the buttons back to the main frame
+    ttk.Button(main_frame, text="Analyze Lap 1", command=lambda: info_lap("lap_times_1.txt", "Lap 1 Analysis")).pack(side=tk.LEFT, padx=5)
+    ttk.Button(main_frame, text="Analyze Lap 2", command=lambda: info_lap("lap_times_2.txt", "Lap 2 Analysis")).pack(side=tk.LEFT, padx=5)
+    ttk.Button(main_frame, text="Analyze Lap 3", command=lambda: info_lap("lap_times_3.txt", "Lap 3 Analysis")).pack(side=tk.LEFT, padx=5)
+    ttk.Button(main_frame, text="Exit", command=root.quit).pack(side=tk.RIGHT, padx=5)
+
+def clear_frame():
+    for widget in main_frame.winfo_children():
+        widget.destroy()
 
 # GUI Setup
 root = tk.Tk()
@@ -84,18 +103,7 @@ root.geometry("900x700")
 main_frame = ttk.Frame(root, padding=10)
 main_frame.pack(fill=tk.BOTH, expand=True)
 
-# Add the button frame at the top
-btn_frame = ttk.Frame(main_frame)
-btn_frame.pack(fill=tk.X, pady=10)
-
-ttk.Button(btn_frame, text="Analyze Lap 1", command=lambda: info_lap("lap_times_1.txt", "Lap 1 Analysis")).pack(side=tk.LEFT, padx=5)
-ttk.Button(btn_frame, text="Analyze Lap 2", command=lambda: info_lap("lap_times_2.txt", "Lap 2 Analysis")).pack(side=tk.LEFT, padx=5)
-ttk.Button(btn_frame, text="Analyze Lap 3", command=lambda: info_lap("lap_times_3.txt", "Lap 3 Analysis")).pack(side=tk.LEFT, padx=5)
-
-ttk.Button(btn_frame, text="Exit", command=root.quit).pack(side=tk.RIGHT, padx=5)
-
-# Add the result label for lap times
-result_label = tk.Label(main_frame, text="", anchor="nw", justify="left", font=("Arial", 10))
-result_label.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+# Show the main menu initially
+show_main_menu()
 
 root.mainloop()

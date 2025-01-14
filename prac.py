@@ -217,11 +217,11 @@ def find_drivers_info():
 def main():
     if len(sys.argv) < 2:
         print("Usage: python script.py <option>")
-        print("""Options:"""
-        "  lap1   - Analyze first lap data"
-        "  lap2   - Analyze second lap data"
-        "  lap3   - Analyze third lap data"
-        "  driver - Find driver information")
+        print("Options:")
+        print("  lap1   - Analyze first lap data")
+        print("  lap2   - Analyze second lap data")
+        print("  lap3   - Analyze third lap data")
+        print("  driver - Find driver information")
         sys.exit(1)
 
     option = sys.argv[1].lower()
@@ -243,7 +243,9 @@ def main():
 if __name__ == "__main__":
     main()
 
-    
+
+         
+
 
 
 
